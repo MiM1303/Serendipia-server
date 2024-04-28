@@ -29,6 +29,12 @@ async function run() {
 
     const spotCollection = client.db('serendipiaDB').collection('spots');
 
+    app.get('/all-spots', async(req, res)=>{
+        const cursor = spotCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+    })
+
     app.post('/add-spot', async(req, res)=>{
         const newSpot = req.body;
         console.log(newSpot);
