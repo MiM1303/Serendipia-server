@@ -36,6 +36,7 @@ async function run() {
         res.send(result);
     })
 
+    // load spots for a specific user using email
     app.get('/my-spots/:email', async(req, res)=>{
       const userEmail = req.params.email;
       // console.log(req.params.email);
@@ -45,15 +46,61 @@ async function run() {
 
   })
 
-  app.get('/my-spots/:email/:id', async(req, res)=>{
-    const id = req.params.id;
-    const query = {_id: new ObjectId(id)};
-    const result = await coffeeCollection.findOne(query);
+  app.get('/add-spot', async(req, res)=>{
+    const spots = spotCollection.find();
+    const result = await spots.toArray();
     res.send(result);
+    })
 
+
+  app.get('/updateSpot', async(req, res)=>{
+    const spots = spotCollection.find();
+    const result = await spots.toArray();
+    res.send(result);
+    })
+
+app.get('/add-spot/:id', async(req, res)=>{
+    const id = req.params.id;
+    console.log(id);
+    const query = {_id: new ObjectId(id)}
+    const result = await spotCollection.findOne(query);
+  res.send(result);
+    })
+  
+  // update from mylist
+  app.get('/updateSpot/:id', async(req, res)=>{
+    console.log(req.params.id);
+    const id = req.params.id;
+    console.log('printing from server', id);
+    const query = {_id: new ObjectId(id)}
+    const result = await spotCollection.findOne(query);
+    res.send(result);
+  })
+
+  app.put('/updateSpot/:id', async (req, res) => {
+    const id = req.params.id;
+    const filter = {_id: new ObjectId(id)};
+    const options = {upsert:true};
+    const updatedSpot = req.body
+    const spot = {
+        $set:{
+            name: updatedSpot.name, 
+            photo: updatedSpot.photo,
+            location: updatedSpot.location, 
+            country: updatedSpot.country,
+            description: updatedSpot.description, 
+            duration: updatedSpot.duration,
+            visitors: updatedSpot.visitors,
+        }
+    }
+
+    const result = await spotCollection.updateOne(filter, spot, options)
+    res.send(result);
 })
 
-    app.post('/add-spot', async(req, res)=>{
+  
+  // add post from add post page
+  app.post('/add-spot', async(req, res)=>{
         const newSpot = req.body;
         console.log(newSpot);
 
@@ -61,6 +108,8 @@ async function run() {
         res.send(result);
     })
 
+    
+    // delete spot from mylist
     app.delete('/my-spots/:email/:id', async(req, res)=>{
       const id = req.params.id;
       const query = {_id:new ObjectId(id)}
@@ -68,8 +117,6 @@ async function run() {
       res.send(result);
     })
     
-
-
 
 
 
