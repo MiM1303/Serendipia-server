@@ -35,9 +35,17 @@ async function run() {
         console.log(result);
         res.send(result);
     })
+    
+    // sorted
+    app.get('/all-spots/sorted', async(req, res)=>{
+        const cursor = spotCollection.find().sort( { "cost": 1 } );
+        const result = await cursor.toArray();
+        console.log(result);
+        res.send(result);
+    })
 
 
-    // for view details
+  // for view details
   app.get('/all-spots/:id', async(req, res)=>{
     const id = req.params.id;
     console.log(id);
