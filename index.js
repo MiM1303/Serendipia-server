@@ -102,6 +102,7 @@ app.get('/add-spot/:id', async(req, res)=>{
     const filter = {_id: new ObjectId(id)};
     const options = {upsert:true};
     const updatedSpot = req.body
+    console.log(updatedSpot);
     const spot = {
         $set:{
             name: updatedSpot.name, 
@@ -111,6 +112,8 @@ app.get('/add-spot/:id', async(req, res)=>{
             description: updatedSpot.description, 
             duration: updatedSpot.duration,
             visitors: updatedSpot.visitors,
+            cost: updatedSpot.cost,
+            season: updatedSpot.season
         }
     }
 
