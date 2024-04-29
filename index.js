@@ -36,6 +36,17 @@ async function run() {
         res.send(result);
     })
 
+
+    // for view details
+  app.get('/all-spots/:id', async(req, res)=>{
+    const id = req.params.id;
+    console.log(id);
+    const query = {_id: new ObjectId(id)}
+    const result = await spotCollection.findOne(query);
+  res.send(result);
+      })
+
+
     // load spots for a specific user using email
     app.get('/my-spots/:email', async(req, res)=>{
       const userEmail = req.params.email;
@@ -51,6 +62,7 @@ async function run() {
     const result = await spots.toArray();
     res.send(result);
     })
+
 
 
   app.get('/updateSpot', async(req, res)=>{
