@@ -29,6 +29,15 @@ async function run() {
 
     const spotCollection = client.db('serendipiaDB').collection('spots');
 
+    // tourist spots in home
+    app.get('/', async(req, res)=>{
+        const cursor = spotCollection.find().limit(6);
+        const result = await cursor.toArray();
+        console.log(result);
+        res.send(result);
+    })
+
+
     app.get('/all-spots', async(req, res)=>{
         const cursor = spotCollection.find();
         const result = await cursor.toArray();
