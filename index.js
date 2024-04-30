@@ -28,6 +28,7 @@ async function run() {
     await client.connect();
 
     const spotCollection = client.db('serendipiaDB').collection('spots');
+    const countriesCollection = client.db('serendipiaDB').collection('countries');
 
     // tourist spots in home
     app.get('/', async(req, res)=>{
@@ -38,12 +39,24 @@ async function run() {
     })
 
 
+    // load countries data
+    app.get('/countries', async(req, res)=>{
+      const cursor = countriesCollection.find();
+      const result = await cursor.toArray();
+      console.log(result);
+      res.send(result);
+    })
+
+   
+
     app.get('/all-spots', async(req, res)=>{
         const cursor = spotCollection.find();
         const result = await cursor.toArray();
         console.log(result);
         res.send(result);
     })
+
+    
     
     // sorted
     app.get('/all-spots/sorted', async(req, res)=>{
@@ -57,11 +70,17 @@ async function run() {
   // for view details
   app.get('/all-spots/:id', async(req, res)=>{
     const id = req.params.id;
-    console.log(id);
+    console.log('id found in server:',req.params.id);
     const query = {_id: new ObjectId(id)}
     const result = await spotCollection.findOne(query);
   res.send(result);
-      })
+    })
+
+    // country details
+    app.get('/all-spots/:country', async(req, res)=>{
+      const result = await spotCollection.find({country:req.params.country}).toArray();
+      res.send(result);
+  })
 
 
     // load spots for a specific user using email
@@ -78,7 +97,7 @@ async function run() {
     const spots = spotCollection.find();
     const result = await spots.toArray();
     res.send(result);
-    })
+  })
 
 
 
@@ -86,7 +105,7 @@ async function run() {
     const spots = spotCollection.find();
     const result = await spots.toArray();
     res.send(result);
-    })
+  })
 
 app.get('/add-spot/:id', async(req, res)=>{
     const id = req.params.id;
@@ -94,7 +113,7 @@ app.get('/add-spot/:id', async(req, res)=>{
     const query = {_id: new ObjectId(id)}
     const result = await spotCollection.findOne(query);
   res.send(result);
-    })
+  })
   
   // update from mylist
   app.get('/updateSpot/:id', async(req, res)=>{
