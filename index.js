@@ -6,7 +6,12 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // mmiddleware
-app.use(cors());
+const corsConfig = {
+  origin: '*',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+  }
+  app.use(cors(corsConfig))
 app.use(express.json());
 
 
@@ -25,7 +30,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const spotCollection = client.db('serendipiaDB').collection('spots');
     const countriesCollection = client.db('serendipiaDB').collection('countries');
@@ -161,7 +166,7 @@ app.get('/add-spot/:id', async(req, res)=>{
 
     
     // delete spot from mylist
-    app.delete('/my-spots/:email/:id', async(req, res)=>{
+    app.delete('/add-spot/:id', async(req, res)=>{
       const id = req.params.id;
       const query = {_id:new ObjectId(id)}
       const result = await spotCollection.deleteOne(query);
@@ -173,8 +178,8 @@ app.get('/add-spot/:id', async(req, res)=>{
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    // await client.db("admin").command({ ping: 1 });
+    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
